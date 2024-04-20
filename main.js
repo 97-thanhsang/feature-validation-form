@@ -2,7 +2,7 @@ function Validator(options){
 
     // hàm thực hiện validate
     function validate(inputElement,rule){
-        var errorElement = inputElement.parentElement.querySelector('.form-message');
+        var errorElement = inputElement.parentElement.querySelector(options.errorSelector);
         var errorMessage = rule.test(inputElement.value);
         if (errorMessage) {
             errorElement.innerText = errorMessage;
@@ -26,8 +26,16 @@ function Validator(options){
             console.log(inputElement); // input #fullname
 
             if (inputElement) {
+                // xử lý trường hợp blur khỏi input
                 inputElement.onblur = function () {
                     validate(inputElement,rule);
+                }
+
+                // xử lý mỗi khi người dùng nhập vào input
+                inputElement.oninput = function () {
+                    var errorElement = inputElement.parentElement.querySelector(options.errorSelector);
+                    errorElement.innerText = '';
+                    inputElement.parentElement.classList.remove('invalid');        
                 }
             }
         })
