@@ -11,7 +11,7 @@ function Validator(options){
         // lấy ra các rules của selector
         var rules = selectorRules[rule.selector];
 
-        console.log(rules);
+        // console.log(rules);
 
         // lập qua từng rule & kiếm tra
         // new có lỗi thì dừng việc kiểm tra
@@ -32,13 +32,51 @@ function Validator(options){
             inputElement.parentElement.classList.remove('invalid');
 
         }
+
+        return !errorMessage;
     }
 
     // lấy element của form cần validate
     var formElement = document.querySelector(options.form);
     if (formElement) {
+
+        formElement.onsubmit = function (e) {
+            e.preventDefault();
+
+            var isFormValid = true;
+
+            // lặp qua từng rule và validate
+            options.rules.forEach(function (rule) {
+                var inputElement = formElement.querySelector(rule.selector);
+                var isValid = validate(inputElement,rule);
+                if (!isValid) {
+                    isFormValid = false;
+                }
+            });
+
+
+            if (isFormValid) {
+                if (typeof options.onSubmit === 'function') {
+
+                    var enableInputs = formElement.querySelectorAll('[name]:not([disabled])');
+
+                    var formValues = Array.from(enableInputs).reduce(function (values,input) {
+                        values[input.name] = input.value;
+                        return values;
+                    },{});
+        
+                    // console.log(enableInputs);
+                    // console.log(formValues);
+        
+                    
+                    options.onSubmit(formValues);
+                }
+            }            
+        }
+
+        // lặp qua mỗi rule và xử lý (lắng nghe sự kiện, blur, input ...)
         options.rules.forEach(function (rule) {
-            console.log(rule.selector); // #fullname
+            // console.log(rule.selector); // #fullname
 
             // lưu lại các rules cho mỗi input
             // selectorRules[rule.selector] = rule.test;
@@ -50,7 +88,7 @@ function Validator(options){
             }
 
             var inputElement = formElement.querySelector(rule.selector);
-            console.log(inputElement); // input #fullname
+            // console.log(inputElement); // input #fullname
 
             if (inputElement) {
                 // xử lý trường hợp blur khỏi input
@@ -67,7 +105,7 @@ function Validator(options){
             }
         });
 
-        console.log(selectorRules)
+        // console.log(selectorRules)
     }
 }
 
