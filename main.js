@@ -56,6 +56,7 @@ function Validator(options){
 
 
             if (isFormValid) {
+                // example 1  : using function & javascript
                 if (typeof options.onSubmit === 'function') {
 
                     var enableInputs = formElement.querySelectorAll('[name]:not([disabled])');
@@ -70,6 +71,11 @@ function Validator(options){
         
                     
                     options.onSubmit(formValues);
+                }
+                // example 2 : using submit with default
+                else
+                {
+                    formElement.submit();
                 }
             }            
         }
