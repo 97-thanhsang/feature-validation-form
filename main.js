@@ -1,29 +1,33 @@
 function Validator(options){
+
+    // hàm thực hiện validate
+    function validate(inputElement,rule){
+        var errorElement = inputElement.parentElement.querySelector('.form-message');
+        var errorMessage = rule.test(inputElement.value);
+        if (errorMessage) {
+            errorElement.innerText = errorMessage;
+            inputElement.parentElement.classList.add('invalid');
+        }
+        else
+        {
+            errorElement.innerText = '';
+            inputElement.parentElement.classList.remove('invalid');
+
+        }
+    }
+
+    // lấy element của form cần validate
     var formElement = document.querySelector(options.form);
     if (formElement) {
         options.rules.forEach(function (rule) {
             console.log(rule.selector); // #fullname
 
             var inputElement = formElement.querySelector(rule.selector);
-            var errorElement = inputElement.parentElement.querySelector('.form-message');
             console.log(inputElement); // input #fullname
 
             if (inputElement) {
                 inputElement.onblur = function () {
-                    // value : inputElement.value
-                    // test func : rule.test
-                    // rule.test();
-
-                    var errorMessage = rule.test(inputElement.value);
-                    if (errorMessage) {
-                        errorElement.innerText = errorMessage;
-                    }
-                    else
-                    {
-                        errorElement.innerText = '';
-                    }
-
-
+                    validate(inputElement,rule);
                 }
             }
         })
@@ -47,8 +51,10 @@ Validator.isRequired = function (selector) {
 Validator.isEmail = function (selector) {
     return {
         selector : selector,
-        test : function () {
+        test : function (value) {
+            var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
             
+            return regex.test(value) ? undefined : 'Trường này phải là email!';
         }
     };
 }
