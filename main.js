@@ -48,11 +48,11 @@ function Validator(options){
  * 2.   Khi hợp lệ  ->  không trả ra cái gì cả underfined
  */
 
-Validator.isRequired = function (selector) {
+Validator.isRequired = function (selector,message) {
     return {
         selector : selector,
         test : function (value) {
-            return value.trim() ? undefined : 'Vui lòng nhập trường này !';
+            return value.trim() ? undefined : message ||'Vui lòng nhập trường này !';
         }
     };
 }
@@ -75,11 +75,11 @@ Validator.minLength = function (selector,min) {
         }
     };
 }
-Validator.isConfirmed = function (selector,getCofirmValue) {
+Validator.isConfirmed = function (selector,getCofirmValue, message) {
     return {
         selector : selector,
         test : function (value) {
-            return value === getCofirmValue() ? undefined : 'Giá trị nhập vào không chính xác';
+            return value === getCofirmValue() ? undefined : message || 'Giá trị nhập vào không chính xác';
         }
     };
 }
