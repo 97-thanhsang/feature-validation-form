@@ -75,3 +75,11 @@ Validator.minLength = function (selector,min) {
         }
     };
 }
+Validator.isConfirmed = function (selector,getCofirmValue) {
+    return {
+        selector : selector,
+        test : function (value) {
+            return value === getCofirmValue() ? undefined : 'Giá trị nhập vào không chính xác';
+        }
+    };
+}
