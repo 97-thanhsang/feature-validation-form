@@ -1,10 +1,20 @@
 function Validator(options){
 
+    function getParent(element,selector) {
+        while (element.parentElement) {
+            if (element.parentElement.matches(selector)) {
+                return element.parentElement;
+            }
+            element = element.parentElement;
+        }
+    }
+
     var selectorRules = {};
 
     // hàm thực hiện validate
     function validate(inputElement,rule){
-        var errorElement = inputElement.parentElement.querySelector(options.errorSelector);
+        var errorElement = getParent(inputElement,options.formGroupSelector).querySelector(options.errorSelector);;
+        // var errorElement = getParent(inputElement,options.formGroupSelector).querySelector(options.errorSelector);
         // var errorMessage = rule.test(inputElement.value);
         var errorMessage;
 
@@ -24,12 +34,12 @@ function Validator(options){
 
         if (errorMessage) {
             errorElement.innerText = errorMessage;
-            inputElement.parentElement.classList.add('invalid');
+            getParent(inputElement,options.formGroupSelector).classList.add('invalid');
         }
         else
         {
             errorElement.innerText = '';
-            inputElement.parentElement.classList.remove('invalid');
+            getParent(inputElement,options.formGroupSelector).classList.remove('invalid');
 
         }
 
@@ -104,9 +114,10 @@ function Validator(options){
 
                 // xử lý mỗi khi người dùng nhập vào input
                 inputElement.oninput = function () {
-                    var errorElement = inputElement.parentElement.querySelector(options.errorSelector);
+                    var parentElement = getParent(inputElement,options.formGroupSelector);
+                    var errorElement = parentElement.querySelector(options.errorSelector);;
                     errorElement.innerText = '';
-                    inputElement.parentElement.classList.remove('invalid');        
+                    parentElement.classList.remove('invalid');        
                 }
             }
         });
@@ -148,11 +159,11 @@ Validator.minLength = function (selector,min) {
         }
     };
 }
-Validator.isConfirmed = function (selector,getCofirmValue, message) {
+Validator.isConfirmed = function (selector,getConfirmValue, message) {
     return {
         selector : selector,
         test : function (value) {
-            return value === getCofirmValue() ? undefined : message || 'Giá trị nhập vào không chính xác';
+            return value === getConfirmValue() ? undefined : message || 'Giá trị nhập vào không chính xác';
         }
     };
 }

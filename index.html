@@ -47,10 +47,11 @@
       <script>
         Validator({
             form : '#form-1',
+            formGroupSelector: '.form-group',
             errorSelector: '.form-message',
             rules : [
                 Validator.isRequired('#fullname','Vui lòng nhập tên đầy đủ'),
-                Validator.isEmail('#email'),
+                // Validator.isEmail('#email'),
                 Validator.minLength('#password',6),
                 Validator.isRequired('#password_confirmation'),
                 Validator.isConfirmed('#password_confirmation',function () {
