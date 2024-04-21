@@ -26,7 +26,21 @@ function Validator(options){
         // lập qua từng rule & kiếm tra
         // new có lỗi thì dừng việc kiểm tra
         for (let i = 0; i < rules.length; i++) {
-            errorMessage = rules[i](inputElement.value);
+
+            switch (inputElement.type) {
+                case 'checkbox':
+                case 'radio':     
+                    errorMessage = rules[i](
+                        document.querySelector(rule.selector + ':checked')
+                    );
+               
+                    break;
+            
+                default:
+                    errorMessage = rules[i](inputElement.value);
+                    break;
+            }
+
             if (errorMessage) {
                 break;
             }
@@ -72,7 +86,28 @@ function Validator(options){
                     var enableInputs = formElement.querySelectorAll('[name]:not([disabled])');
 
                     var formValues = Array.from(enableInputs).reduce(function (values,input) {
-                        values[input.name] = input.value;
+                        
+
+                        switch (input.type) {
+                            case 'radio':
+                                values[input.name] = formElement.querySelector('input[name="'+ input.name +'"]:checked').value;
+                                break;
+                            case 'checkbox':
+                                if (!input.matches(':checked')) {
+                                    values[input.name] = '';
+                                    return values;
+                                }
+                                if (!Array.isArray(values[input.name])) {
+                                    values[input.name] = [];
+                                }
+                                values[input.name].push(input.value);
+                                break;
+                        
+                            default:
+                                values[input.name] = input.value;
+                                break;
+                        }
+
                         return values;
                     },{});
         
@@ -103,23 +138,33 @@ function Validator(options){
                 selectorRules[rule.selector] = [rule.test];
             }
 
-            var inputElement = formElement.querySelector(rule.selector);
+            var inputElements = formElement.querySelectorAll(rule.selector);
             // console.log(inputElement); // input #fullname
 
-            if (inputElement) {
-                // xử lý trường hợp blur khỏi input
-                inputElement.onblur = function () {
-                    validate(inputElement,rule);
-                }
+            Array.from(inputElements).forEach(function (inputElement) {
+                if (inputElement) {
+                    // xử lý trường hợp blur khỏi input
+                    inputElement.onblur = function () {
+                        validate(inputElement,rule);
+                    }
+    
+                    // xử lý mỗi khi người dùng nhập vào input
+                    inputElement.oninput = function () {
+                        var parentElement = getParent(inputElement,options.formGroupSelector);
+                        var errorElement = parentElement.querySelector(options.errorSelector);;
+                        errorElement.innerText = '';
+                        parentElement.classList.remove('invalid');        
+                    }
 
-                // xử lý mỗi khi người dùng nhập vào input
-                inputElement.oninput = function () {
-                    var parentElement = getParent(inputElement,options.formGroupSelector);
-                    var errorElement = parentElement.querySelector(options.errorSelector);;
-                    errorElement.innerText = '';
-                    parentElement.classList.remove('invalid');        
+                    // xử lý mỗi khi onchange selected
+
+                    inputElement.onchange = function () {
+                        validate(inputElement,rule);
+                    }
                 }
-            }
+            })
+
+
         });
 
         // console.log(selectorRules)
@@ -136,7 +181,7 @@ Validator.isRequired = function (selector,message) {
     return {
         selector : selector,
         test : function (value) {
-            return value.trim() ? undefined : message ||'Vui lòng nhập trường này !';
+            return value ? undefined : message ||'Vui lòng nhập trường này !';
         }
     };
 }

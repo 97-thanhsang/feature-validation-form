@@ -38,6 +38,42 @@
             <input id="password_confirmation" name="password_confirmation" placeholder="Nhập lại mật khẩu" type="password" class="form-control">
             <span class="form-message"></span>
           </div>
+          <div class="form-group">
+            <label for="province" class="form-label">Tỉnh/TP</label>
+            <select name="province" id="province" class="form-control">
+              <option value="">-- Chọn Tỉnh/TP</option>
+              <option value="HN">Hà Nội</option>
+              <option value="TPHCM">TP Hồ Chí Minh</option>
+            </select>
+            <span class="form-message"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Giới tính</label>
+            <div class="radio-container">
+              <input id="male" name="gender" type="radio" value="male">
+              <label for="male">Nam</label>
+            
+              <input id="female" name="gender" type="radio" value="female">
+              <label for="female">Nữ</label>
+            </div>
+
+            <span class="form-message"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Kĩ năng</label>
+            <div class="radio-container">
+              <input id="skill-1" name="skill" type="checkbox" value="javascript">
+              <label for="skill-1">Javascript</label>
+            
+              <input id="skill-2" name="skill" type="checkbox" value="net">
+              <label for="skill-2">.Net</label>
+            </div>
+
+            <span class="form-message"></span>
+          </div>
+          
       
           <button class="form-submit">Đăng ký</button>
         </form>
@@ -56,7 +92,10 @@
                 Validator.isRequired('#password_confirmation'),
                 Validator.isConfirmed('#password_confirmation',function () {
                   return document.querySelector('#form-1 #password').value;
-                },'Mật khẩu nhập lại không chính xác !')
+                },'Mật khẩu nhập lại không chính xác !'),
+                Validator.isRequired('input[name="gender"]'),
+                Validator.isRequired('#province'),
+                Validator.isRequired('input[name="skill"]'),
             ],
             // example1
             onSubmit: function (data) {

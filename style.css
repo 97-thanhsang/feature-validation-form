@@ -44,6 +44,7 @@
     flex-direction: column;
   }
   
+  
   .form-label,
   .form-message {
     text-align: left;
@@ -104,4 +105,37 @@
   .spacer {
     margin-top: 36px;
   }
-  
+  /* Hide the default radio buttons */
+/* Style the radio container */
+.radio-container {
+  font-size: 16px;
+}
+
+/* Hide the default radio buttons */
+.radio-container input[type="radio"],.radio-container input[type="checkbox"] {
+  display: none;
+}
+
+/* Style the custom radio buttons */
+.radio-container label {
+  cursor: pointer;
+  padding-left: 25px; /* Adjust this value to increase/decrease the size of the radio button */
+  margin-right: 15px;
+}
+
+/* Style the custom radio button indicator */
+.radio-container label:before {
+  content: "";
+  display: inline-block;
+  width: 16px; /* Size of the radio button indicator */
+  height: 16px; /* Size of the radio button indicator */
+  border: 2px solid #999; /* Border color */
+  border-radius: 50%; /* Make it a circle */
+  margin-right: 5px; /* Spacing between the indicator and label text */
+}
+
+/* Style the custom radio button indicator when checked */
+.radio-container input[type="radio"]:checked + label:before,.radio-container input[type="checkbox"]:checked + label:before {
+  background-color: #007bff; /* Change this to the color you want when checked */
+  border-color: #007bff; /* Change this to the color you want when checked */
+}
