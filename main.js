@@ -85,7 +85,8 @@ function Validator(options){
 
                     var enableInputs = formElement.querySelectorAll('[name]:not([disabled])');
 
-                    var formValues = Array.from(enableInputs).reduce(function (values,input) {
+                    var formValues = Array.from(enableInputs)
+                    .reduce(function (values,input) {
                         
 
                         switch (input.type) {
@@ -101,6 +102,9 @@ function Validator(options){
                                     values[input.name] = [];
                                 }
                                 values[input.name].push(input.value);
+                                break;
+                            case 'file':
+                                values[input.name] = input.files;
                                 break;
                         
                             default:
